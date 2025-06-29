@@ -1,24 +1,31 @@
 package handler
 
 import (
-	"fmt"
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
-func HelloHandler(message string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintln(w, message)
+// HelloHandler returns a plain text hello message
+// @Summary Hello plain text
+// @Description Returns a hello message in plain text
+// @Tags hello
+// @Produce plain
+// @Success 200 {string} string "ok"
+// @Router / [get]
+func HelloHandler(message string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.String(200, message+"\n")
 	}
 }
 
-func HelloAPIHandler(message string) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodGet {
-			w.WriteHeader(http.StatusMethodNotAllowed)
-			fmt.Fprintln(w, "Method Not Allowed")
-			return
-		}
-		w.Header().Set("Content-Type", "application/json")
-		fmt.Fprintf(w, `{"message": "%s"}\n`, message)
+// HelloAPIHandler returns a hello message as JSON
+// @Summary Hello JSON
+// @Description Returns a hello message in JSON format
+// @Tags hello
+// @Produce json
+// @Success 200 {object} map[string]string
+// @Router /hello [get]
+func HelloAPIHandler(message string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.JSON(200, gin.H{"message": message})
 	}
 }

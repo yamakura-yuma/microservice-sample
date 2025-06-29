@@ -1,0 +1,37 @@
+basePath: /
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample server for Hello World microservice.
+  title: Hello World API
+  version: "1.0"
+paths:
+  /:
+    get:
+      description: Returns a hello message in plain text
+      produces:
+      - text/plain
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: Hello plain text
+      tags:
+      - hello
+  /hello:
+    get:
+      description: Returns a hello message in JSON format
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Hello JSON
+      tags:
+      - hello
+swagger: "2.0"

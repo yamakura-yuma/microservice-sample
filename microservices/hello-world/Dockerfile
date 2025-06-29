@@ -11,12 +11,13 @@ COPY go.sum .
 RUN go mod download
 
 COPY . .
-RUN go build -o ./build/http/main ./cmd/http/main.go
+# 完全な静的バイナリでビルド
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./build/http/main ./cmd/http/main.go
 
 
 
-FROM docker.io/library/alpine:3.19
+FROM gcr.io/distroless/static
 WORKDIR /app
 COPY --from=build /app/build/http /app/build/http
-EXPOSE 8080
+EXPOSE 8081
 CMD ["/app/build/http/main"]

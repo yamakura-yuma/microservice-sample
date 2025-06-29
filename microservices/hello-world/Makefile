@@ -1,5 +1,6 @@
 .PHONY: help
 .PHONY: build run clean test
+.PHONY: swagger
 .PHONY: podman-build podman-run
 
 help:
@@ -9,6 +10,7 @@ help:
 	@echo "                 例: PORT=8081 HELLO_MESSAGE=Hi make run"
 	@echo "  clean        : バイナリ削除"
 	@echo "  test         : Goテスト実行"
+	@echo "  swagger      : Swaggerドキュメント生成"
 	@echo "  podman-build : Podmanイメージビルド"
 	@echo "  podman-run   : Podmanでコンテナ実行"
 	@echo "                 例: make podman-run PORT=8081 HELLO_MESSAGE=Hi"
@@ -25,8 +27,17 @@ clean:
 test:
 	go test ./...
 
+swagger:
+	swag init -g cmd/http/main.go -o ./docs
+
 podman-build:
 	podman build -t hello-world-service .
 
 podman-run: podman-build
-	podman run --rm -e PORT=$(PORT) -e HELLO_MESSAGE="$(HELLO_MESSAGE)" -p $(or $(PORT),8080):$(or $(PORT),8080) hello-world-service
+	podman run --rm -e PORT=$(PORT) -e HELLO_MESSAGE="$(HELLO_MESSAGE)" -p $(or $(PORT),8081):$(or $(PORT),8081) hello-world-service
+
+podman-ps:
+	podman ps
+
+podman-prune:
+	podman system prune -a -f
