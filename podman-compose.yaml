@@ -1,0 +1,18 @@
+version: '3'
+services:
+  hello-world:
+    build: ./microservices/hello-world
+    image: hello-world-service
+    environment:
+      - HELLO_MESSAGE="Hello World! (hello-world-service)"
+      - PORT=8080
+    ports:
+      - "8080:8080"
+  hello-world-2:
+    build: ./microservices/hello-world
+    image: hello-world-service
+    environment:
+      - HELLO_MESSAGE="Hello World! (hello-world-service-2)"
+      - PORT=8081
+    ports:
+      - "8081:8081"

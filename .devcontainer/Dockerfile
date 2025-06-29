@@ -1,12 +1,9 @@
-# debian bullseye
-FROM mcr.microsoft.com/devcontainers/typescript-node:1-20-bullseye
+FROM mcr.microsoft.com/devcontainers/base:bookworm
 
-# Install go
-COPY --from=golang:1.22.2-alpine /usr/local/go/ /usr/local/go/
-ENV GOPATH /go
-ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
-
-# common apt install
+############################################################
+# Common apt install
+#   - software-properties-common: for add-apt-repository and other utilities
+############################################################
 RUN <<EOF
 apt-get update -y
 apt-get install -y --no-install-recommends \
@@ -15,13 +12,19 @@ apt-get clean
 rm -rf /var/lib/apt/lists/*
 EOF
 
-# Install podman
+############################################################
+# Podman & rootless Podman support
+#   - podman: main package
+#   - uidmap: for rootless podman user namespace
+#   - slirp4netns: for rootless podman network isolation
+############################################################
 RUN <<EOF
 apt-get update -y
 apt-get install -y --no-install-recommends \
-    podman
+    podman \
+    podman-compose \
+    uidmap \
+    slirp4netns
 apt-get clean
 rm -rf /var/lib/apt/lists/*
-
-podman completion bash -f /etc/bash_completion.d/podman
 EOF
